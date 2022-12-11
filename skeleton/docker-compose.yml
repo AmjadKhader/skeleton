@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  db:
+    image: mysql:latest
+    container_name: db
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=skeleton
+    ports:
+      - "3307:3306"
+
+  skeleton-service:
+    restart: on-failure
+    image: skeleton-service-container
+    ports:
+      - "8092:8092"
+    depends_on:
+      - db
+    environment:
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
