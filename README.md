@@ -9,13 +9,14 @@ Please consider to have to following sections inorder for a successful run:
 
 #### Endpoints
 
-* http://localhost:8092/authentication/login
+* http://0.0.0.0:8082/authentication/login (POST)
+* http://0.0.0.0:8082/authentication/logout (POST)
 
 #### Usage
 
 1. Call the **`authentication/login`** api using the following credentials:
 
-`username: hr`
+`username: amjad`
 
 `password: 1234`
 
@@ -61,4 +62,5 @@ Use the following command to set up your database.
 
 #### Now you can use postman to use the above-mentioned endpoints as below.
 
-* http://0.0.0.0:8092/user/login (POST)
+* http://0.0.0.0:8082/authentication/login (POST)
+* http://0.0.0.0:8082/authentication/logout (POST)
