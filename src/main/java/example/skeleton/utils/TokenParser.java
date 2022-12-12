@@ -7,6 +7,8 @@ import io.jsonwebtoken.security.Keys;
 import java.security.KeyPair;
 import java.util.Date;
 
+import static example.skeleton.constant.Constants.expiredUserTokens;
+
 public class TokenParser {
 
     private TokenParser() {
@@ -36,13 +38,13 @@ public class TokenParser {
                     .build()
                     .parseClaimsJws(jwtToken);
 
-            return true;
+            return !expiredUserTokens.contains(jwtToken);
         } catch (Exception e) {
             return false;
         }
     }
 
     public static void invalidateToken(String userToken) {
-        Jwts.claims().remove(userToken);
+        expiredUserTokens.add(userToken);
     }
 }

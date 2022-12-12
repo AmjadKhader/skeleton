@@ -26,4 +26,9 @@ public class UserEntity implements Serializable {
 
     @Column(name = "password")
     private String password;
+
+    public UserEntity(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 }
