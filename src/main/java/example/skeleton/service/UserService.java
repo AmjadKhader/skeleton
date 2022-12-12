@@ -2,8 +2,10 @@ package example.skeleton.service;
 
 import example.skeleton.model.UserEntity;
 import example.skeleton.repo.UserRepository;
+import example.skeleton.request.InsertUserRequest;
 import example.skeleton.request.UserLoginRequest;
 import example.skeleton.request.UserLogoutRequest;
+import example.skeleton.request.UserUpdatePasswordRequest;
 import example.skeleton.utils.PasswordEncoder;
 import example.skeleton.utils.TokenParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +14,11 @@ import org.springframework.stereotype.Service;
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 
 import static example.skeleton.constant.Constants.ENCRYPTION_ERROR;
 import static example.skeleton.constant.Constants.WRONG_CREDENTIALS;
-import static example.skeleton.constant.Constants.userToken;
+import static example.skeleton.constant.Constants.userTokens;
 
 @Service
 public class UserService {
@@ -38,13 +41,13 @@ public class UserService {
             }
 
             // if this user is already logged in, return its token ...
-            if (userToken.containsKey(userLoginRequest.getUsername())
-                    && TokenParser.validateToken(userToken.get(userLoginRequest.getUsername()))) {
-                return userToken.get(userLoginRequest.getUsername());
+            if (userTokens.containsKey(userLoginRequest.getUsername())
+                    && TokenParser.validateToken(userTokens.get(userLoginRequest.getUsername()))) {
+                return userTokens.get(userLoginRequest.getUsername());
             }
 
             String token = TokenParser.generateToken(userLoginRequest.getUsername());
-            userToken.put(userLoginRequest.getUsername(), token);
+            userTokens.put(userLoginRequest.getUsername(), token);
 
             return token;
         } catch (RuntimeException wrongUsernameAndPasswordException) {
@@ -57,11 +60,11 @@ public class UserService {
     public boolean processLogout(UserLogoutRequest userLogoutRequest) {
         try {
             // if this user is already logged in, remove its token ...
-            if (userToken.containsKey(userLogoutRequest.getUsername())) {
+            if (userTokens.containsKey(userLogoutRequest.getUsername())) {
 
-                String uToken = userToken.get(userLogoutRequest.getUsername());
+                String uToken = userTokens.get(userLogoutRequest.getUsername());
 
-                userToken.remove(userLogoutRequest.getUsername()); // remove from local map ...
+                userTokens.remove(userLogoutRequest.getUsername()); // remove from local map ...
                 TokenParser.invalidateToken(uToken); // remove from claims ...
                 return true;
             }
@@ -70,6 +73,48 @@ public class UserService {
 
         } catch (RuntimeException runtimeException) {
             throw new RuntimeException(runtimeException.getMessage());
+        }
+    }
+
+    public String addUser(InsertUserRequest insertUserRequest) {
+        try {
+            // Encrypt the given password ...
+            String encryptedPassword = PasswordEncoder.encode(
+                    insertUserRequest.getUsername().toLowerCase(Locale.ROOT) + insertUserRequest.getPassword());
+
+            UserEntity user = userRepository.save(new UserEntity(insertUserRequest.getUsername(), encryptedPassword));
+            return String.valueOf(user.getId());
+        } catch (Exception exception) {
+            throw new RuntimeException("Error creating new user ...");
+        }
+    }
+
+    public String updatePassword(String userId, UserUpdatePasswordRequest updatePasswordRequest) {
+        try {
+
+            Optional<UserEntity> user = userRepository.findById(Long.valueOf(userId));
+            if (!user.isPresent()) {
+                throw new RuntimeException("User was not found ...");
+            }
+
+            // Encrypt the given password ...
+            String encryptedPassword = PasswordEncoder.encode(
+                    user.get().getUsername().toLowerCase(Locale.ROOT) + updatePasswordRequest.getPassword());
+
+            user.get().setPassword(encryptedPassword);
+
+            userRepository.save(user.get());
+            return String.valueOf(user.get().getId());
+        } catch (Exception exception) {
+            throw new RuntimeException("Error creating new user ...");
+        }
+    }
+
+    public void deleteUser(String userId) {
+        try {
+            userRepository.deleteById(Long.valueOf(userId));
+        } catch (Exception exception) {
+            throw new RuntimeException("Error creating new user ...");
         }
     }
 }

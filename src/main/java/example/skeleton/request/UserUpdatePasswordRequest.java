@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserLogoutRequest {
+public class UserUpdatePasswordRequest {
     @NotNull
-    private String username;
+    private String password;
 }
