@@ -9,13 +9,13 @@ Please consider to have to following sections inorder for a successful run:
 
 #### Endpoints
 
-* http://localhost:8092/authentication/login
+* http://localhost:8082/authentication/login
 
 #### Usage
 
 1. Call the **`authentication/login`** api using the following credentials:
 
-`username: hr`
+`username: amjad`
 
 `password: 1234`
 
@@ -47,7 +47,7 @@ Use the following command to set up your database.
 
     USE skeleton;
     
-    CREATE TABLE `user` (
+    CREATE TABLE `userLoginRequest` (
     `user_id` int NOT NULL AUTO_INCREMENT,
     `username` varchar(10) NOT NULL,
     `password` text NOT NULL,
@@ -56,9 +56,9 @@ Use the following command to set up your database.
     UNIQUE KEY `username_UNIQUE` (`username`)
     );
 
-    INSERT INTO `user` (user_id, username, password) VALUES (1 , 'amjad' , 'a243d9d9fa83288ee8dfb7fafb48360afec352eaf638061820c9af9db1ddc99d49b6dc8f920f169eff76a5b57ba420a7049ff1fbecf6eeebadae63ac17349ecd');
+    INSERT INTO `userLoginRequest` (user_id, username, password) VALUES (1 , 'amjad' , 'a243d9d9fa83288ee8dfb7fafb48360afec352eaf638061820c9af9db1ddc99d49b6dc8f920f169eff76a5b57ba420a7049ff1fbecf6eeebadae63ac17349ecd');
 
 
 #### Now you can use postman to use the above-mentioned endpoints as below.
 
-* http://0.0.0.0:8092/user/login (POST)
+* http://0.0.0.0:8082/userLoginRequest/login (POST)

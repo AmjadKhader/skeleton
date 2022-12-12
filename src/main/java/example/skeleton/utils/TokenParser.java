@@ -14,9 +14,10 @@ public class TokenParser {
 
     private static final KeyPair keys = Keys.keyPairFor(SignatureAlgorithm.RS512);
 
-    public static String generateToken() {
+    public static String generateToken(String username) {
 
         return Jwts.builder()
+                .setIssuer(username)
                 .setExpiration(new Date(System.currentTimeMillis() + 1800000)) // 30 minutes ...
                 .signWith(keys.getPrivate())
                 .compact();
@@ -39,5 +40,9 @@ public class TokenParser {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public static void invalidateToken(String userToken) {
+        Jwts.claims().remove(userToken);
     }
 }
