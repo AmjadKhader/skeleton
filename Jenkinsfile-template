@@ -33,8 +33,8 @@ pipeline {
       steps {
         sshagent(credentials: ['<jenkins-credential>']) {
           // Copy to server
-          sh "chmod 400 \"/jenkins.pem\""
-          sh "scp -i /jenkins.pem target/skeleton-1.0.0.jar <user>@<aws-ec2-server>:/home/ubuntu"
+          sh "chmod 400 \"jenkins.pem\""
+          sh "scp -i jenkins.pem target/skeleton-1.0.0.jar <user>@<aws-ec2-server>:/home/ubuntu"
         }
       }
     }
@@ -43,7 +43,7 @@ pipeline {
       steps {
         // sshagent(credentials: ['amj']) {
           // // Run/Re-run as server
-          // sh """ssh -i /jenkins.pem -tt <user>@<aws-ec2-server> << EOF
+          // sh """ssh -i jenkins.pem -tt <user>@<aws-ec2-server> << EOF
           // // Restart the service
           // sudo systemctl restart automation-validation
           // exit
