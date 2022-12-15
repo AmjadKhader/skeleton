@@ -10,6 +10,7 @@ import example.skeleton.utils.PasswordEncoder;
 import example.skeleton.utils.TokenParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
@@ -25,6 +26,7 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
+    @Transactional
     public String processLogin(UserLoginRequest userLoginRequest) throws NoSuchAlgorithmException {
         try {
             // Encrypt the given password ...
@@ -76,6 +78,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public String addUser(InsertUserRequest insertUserRequest) {
         try {
             // Encrypt the given password ...
@@ -89,6 +92,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public String updatePassword(String userId, UserUpdatePasswordRequest updatePasswordRequest) {
         try {
 
@@ -110,6 +114,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public void deleteUser(String userId) {
         try {
             userRepository.deleteById(Long.valueOf(userId));
