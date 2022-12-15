@@ -7,3 +7,17 @@ spring:
     username: amjad
     password: password
     driver-class-name: com.mysql.cj.jdbc.Driver
+security:
+  checkAuthentication:
+    -
+        path: "/authentication/logout"
+        method: "POST"
+    -
+        path: "/user/"
+        method: "POST"
+    -
+        path: "/user/"
+        method: "DELETE"
+    -
+        path: "/user/change_password"
+        method: "PUT"
