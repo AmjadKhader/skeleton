@@ -21,3 +21,6 @@ security:
     -
         path: "/user/change_password"
         method: "PUT"
+feign-client:
+  order:
+    baseUrl: http://localhost:8084
