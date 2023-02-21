@@ -8,19 +8,10 @@ spring:
     password: password
     driver-class-name: com.mysql.cj.jdbc.Driver
 security:
-  checkAuthentication:
+  skipCheckAuthentication:
     -
-        path: "/authentication/logout"
+        path: "/authentication/login"
         method: "POST"
-    -
-        path: "/user/"
-        method: "POST"
-    -
-        path: "/user/"
-        method: "DELETE"
-    -
-        path: "/user/change_password"
-        method: "PUT"
 feign-client:
   order:
     baseUrl: http://localhost:8084

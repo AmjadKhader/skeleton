@@ -27,29 +27,32 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         String requestMethod = request.getMethod();
         String requestURI = request.getRequestURI();
 
-        List<AuthenticationEndpointConfiguration> currentEndpoint = applicationConfiguration.getCheckAuthentication()
+        List<AuthenticationEndpointConfiguration> currentEndpoint = applicationConfiguration.getSkipCheckAuthentication()
                 .stream()
                 .filter(endpoint -> endpoint.getMethod().equalsIgnoreCase(requestMethod) && requestURI.contains(endpoint.getPath()))
                 .collect(Collectors.toList());
 
         if (currentEndpoint.size() == 0) {
+            String jwtToken = request.getHeader("Authorization");
+            if (TokenParser.validateToken(jwtToken)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+        }
+
+        if (currentEndpoint.size() == 1) {
             filterChain.doFilter(request, response); // no need to check auth on this endpoint ...
             return;
         }
 
         if (currentEndpoint.size() > 1) {
             response.setStatus(405, "Error configure auth endpoints");
-            return;
-        }
-
-
-        String jwtToken = request.getHeader("Authorization");
-        if (TokenParser.validateToken(jwtToken)) {
-            filterChain.doFilter(request, response);
             return;
         }
 
