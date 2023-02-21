@@ -14,5 +14,5 @@ import java.util.List;
 @Component
 @ConfigurationProperties(prefix = "security")
 public class ApplicationConfiguration {
-    private List<AuthenticationEndpointConfiguration> checkAuthentication;
+    private List<AuthenticationEndpointConfiguration> skipCheckAuthentication;
 }
